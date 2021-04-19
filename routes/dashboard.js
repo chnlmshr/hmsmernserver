@@ -44,7 +44,6 @@ router.get("/doctor", (req, res) => {
     const iat = parseInt(doctor.iat);
     Doctor.findById(doctor._id)
       .select(["-password", "-_id"])
-      //.populate('')
       .exec((err, doctor) => {
         if (err)
           res.send({

@@ -29,6 +29,7 @@ const disease=require("./routes/disease")
 const reception=require("./routes/reception")
 const settings=require("./routes/settings")
 const choosedoctor=require('./routes/choosedoctor')
+const choosepatient=require('./routes/choosepatient')
 const report=require('./routes/reports')
 const visit=require('./routes/visit')
 const admin=require('./routes/admin')
@@ -40,6 +41,7 @@ app.use("/api", settings);
 //app.use("/api", require("./routes/rooms"));
 app.use("/api",reception);
 app.use("/api",choosedoctor);
+app.use("/api",choosepatient);
 app.use("/api",report);
 app.use("/api",visit);
 app.use("/api",admin);

@@ -203,4 +203,71 @@ router.get("/deletepatient", (req, res) => {
       res.status(400).redirect("/api");
     });
 });
+
+
+
+router.post("/updatedoctoraccount", (req, res) => {
+  const token = req.body.token.split(" ")[1];
+  jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
+    if (err || !payload) {
+      res.send({ err: "Something went wrong!" });
+    } else {
+      const name= req.body.name;
+      const email = req.body.email;
+      const phone = req.body.phone;
+      // const sex = req.body.sex;
+      const degree = req.body.degree;
+      const speciality = req.body.speciality;
+      const avgDiagnosisTime  = req.body.avgDiagnosisTime
+      
+
+      // GET form attributes
+      // var PD = req.body.PD;
+      // if (_.isEmpty(PD)) {
+      //   PD = [];
+      // }
+
+      Doctor.findByIdAndUpdate(
+        payload._id,
+        { name:name,
+          email: email,
+          phone: phone,
+          avgDiagnosisTime:avgDiagnosisTime,
+          speciality:speciality,
+          degree:degree,
+
+
+        }
+        // {
+        //   $set: {
+        //     diseases: PD,
+        //     lastUpdate: new Date().getTime(),
+        //   },
+        // },
+        // {
+        //   new: true,
+        // }
+      )
+        .then((doctor) => {
+          // patient.updateScore();
+          res.send({ success: true });
+        })
+        .catch((err) => {
+          console.log(err);
+          res.send({ success: false });
+        });
+    }
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
 module.exports = router;
