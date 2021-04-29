@@ -1,5 +1,4 @@
 const Doctor = require("../models/Doctor");
-const Room = require("../models/Rooms");
 const Patient = require("../models/Patient"),
   jwt = require("jsonwebtoken"),
   bcrypt = require("bcryptjs"),
@@ -176,33 +175,33 @@ router.post("/updatepatientaccount", (req, res) => {
   });
 });
 //
-router.get("/deletepatient", (req, res) => {
-  var email = req.params.email;
+// router.get("/deletepatient", (req, res) => {
+//   var email = req.params.email;
 
-  Promise.all([Room.find({}), Patient.findOne({ email: email })])
-    .then((data) => {
-      var rooms = data[0];
-      var patient = data[1];
+//   Promise.all([Room.find({}), Patient.findOne({ email: email })])
+//     .then((data) => {
+//       var rooms = data[0];
+//       var patient = data[1];
 
-      // if the patient is in a room, make the room empty
-      if (patient.room !== "noroom") {
-        for (var i = 0; i < rooms.length; ++i) {
-          if (rooms[i].name === patient.room) {
-            rooms[i].availability = false;
-            rooms[i].save();
-            break;
-          }
-        }
-      }
+//       // if the patient is in a room, make the room empty
+//       if (patient.room !== "noroom") {
+//         for (var i = 0; i < rooms.length; ++i) {
+//           if (rooms[i].name === patient.room) {
+//             rooms[i].availability = false;
+//             rooms[i].save();
+//             break;
+//           }
+//         }
+//       }
 
-      patient.remove().then((patients) => {
-        res.status(200).redirect("/api");
-      });
-    })
-    .catch((err) => {
-      res.status(400).redirect("/api");
-    });
-});
+//       patient.remove().then((patients) => {
+//         res.status(200).redirect("/api");
+//       });
+//     })
+//     .catch((err) => {
+//       res.status(400).redirect("/api");
+//     });
+// });
 
 
 

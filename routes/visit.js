@@ -16,7 +16,9 @@ router.post("/visit", (req, res) => {
             consultant: req.body.consultant,
           })
             .then((reception) => {
-              Doctor.findById(req.body.consultant).then((doctor) => {
+              Doctor.findByIdAndUpdate(req.body.consultant, {
+                $inc: { patientsInQueue: 1 },
+              }).then((doctor) => {
                 res.send({
                   success: true,
                   waitingTime: doctor.avgDiagnosisTime * doctor.patientsInQueue,

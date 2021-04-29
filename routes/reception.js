@@ -1,6 +1,7 @@
 const Reception = require("../models/Reception");
 const router = require("express").Router();
 const jwt = require("jsonwebtoken");
+const Doctor = require("../models/Doctor");
 
 router.post("/reception", (req, res) => {
   const token = req.body.token.split(" ")[1];
@@ -31,9 +32,11 @@ router.post("/reception", (req, res) => {
             {
               complications: complications,
               speciality: speciality,
-              patient: payload._id,
               dateCreated: Date.now(),
               lastModified: Date.now(),
+              //consultant: " ",
+              consultantWord: "",
+              medicines: "",
             }
           )
             .then((reception) => {

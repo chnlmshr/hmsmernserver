@@ -9,7 +9,7 @@ const {ObjectID} = require('mongodb');
 router.get('/getrooms', (req, res) => {
     Room.find({}, null, {sort: {name: 1}}).then((rooms) => {
         var roomsJSON = {};
-        
+
         for (var i = 0; i < rooms.length; ++i) {
             roomsJSON[rooms[i].name] = rooms[i].availability;
         }
@@ -23,23 +23,18 @@ router.get('/getrooms', (req, res) => {
     });
 });
 
-
 router.get('/updateroom/:email/:futureRoom', (req, res) => {
     var email = req.params.email;
     var futureRoom = req.params.futureRoom;
 
-  
-   
     Promise.all([Room.find({}), Room.findOne({name: futureRoom}), Patient.findOne({email:email})])
         .then((data) => {
             var rooms = data[0];
             var futureRoomObject = data[1];
             var patient = data[2];
 
+            if (rooms && patient && futureRoomObject && futureRoomObject["availability"] === false) {
 
-                
-            if (rooms && patient && futureRoomObject && futureRoomObject["availability"] === false) { 
-                
                 if (patient.room !== 'noroom') {
                     for (var i = 0; i < rooms.length; ++i) {
                         if (rooms[i].name === patient.room) {
@@ -53,9 +48,8 @@ router.get('/updateroom/:email/:futureRoom', (req, res) => {
                 patient.room = futureRoomObject.name;
                 patient.save();
 
-                
                 if (futureRoomObject.name !== 'noroom') {
-                    
+
                     for (var i = 0; i < rooms.length; ++i) {
                         if (rooms[i].name === futureRoomObject.name) {
                             rooms[i].availability = true;
@@ -74,18 +68,16 @@ router.get('/updateroom/:email/:futureRoom', (req, res) => {
         });
 });
 
-
 router.get('/swappatients/:patientWithRoom/:patientWithoutRoom', (req, res) => {
     var patientWithRoom = req.params.patientWithRoom;
     var patientWithoutRoom = req.params.patientWithoutRoom;
 
-  
     Promise.all([Patient.findOne({hospitalNumber: patientWithRoom}), Patient.findOne({hospitalNumber: patientWithoutRoom})])
         .then((data) => {
             var patientWithRoom = data[0];
             var patientWithoutRoom = data[1];
 
-        if (patientWithRoom && patientWithoutRoom && patientWithRoom["room"] !== 'noroom' && patientWithoutRoom["room"] === 'noroom') {  
+        if (patientWithRoom && patientWithoutRoom && patientWithRoom["room"] !== 'noroom' && patientWithoutRoom["room"] === 'noroom') {
                 var roomOfPatient = patientWithRoom["room"];
 
                 patientWithRoom.room = "noroom";
@@ -104,11 +96,9 @@ router.get('/swappatients/:patientWithRoom/:patientWithoutRoom', (req, res) => {
         });
 });
 
-
 router.post('/addroom', (req, res) => {
     var roomName = req.body.roomName;
 
-    
     if (_.isString(roomName) && !_.isNaN(roomName)) {
         var room = Room({
             name: roomName,
@@ -153,6 +143,5 @@ router.post('/deleterooms', (req, res) => {
         res.status(400).redirect('/systemsettings');
     }
 });
-
 
 module.exports = router;
